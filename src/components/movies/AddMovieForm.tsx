@@ -42,7 +42,8 @@ const AddMovieForm: React.FC<AddMovieFormProps> = ({ onSubmit, onCancel }) => {
     };
     
     fetchSuggestions();
-  }, [debouncedSearchTerm, searchMovies]);
+    // Remove searchMovies from the dependency array to avoid infinite loop
+  }, [debouncedSearchTerm]); // Only depend on the search term
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
