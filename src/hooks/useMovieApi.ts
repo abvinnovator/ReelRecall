@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 // Define the interface for movie search results
 export interface MovieSearchResult {
@@ -24,11 +24,11 @@ export const useMovieApi = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Using TMDB API - you'll need to register for an API key at https://www.themoviedb.org/
-  const API_KEY = import.meta.env.VITE_TMDB_API_KEY || 'YOUR_API_KEY';
+  const API_KEY = import.meta.env.VITE_TMDB_API_KEY
   const BASE_URL = 'https://api.themoviedb.org/3';
 
-  const searchMovies = async (query: string): Promise<MovieSearchResult[]> => {
+  // Using useCallback to memoize functions
+  const searchMovies = useCallback(async (query: string): Promise<MovieSearchResult[]> => {
     if (!query.trim()) return [];
     
     setIsLoading(true);
@@ -59,9 +59,9 @@ export const useMovieApi = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [API_KEY, BASE_URL]); // Dependencies that won't change between renders
 
-  const getMovieDetails = async (movieId: string): Promise<MovieDetails | null> => {
+  const getMovieDetails = useCallback(async (movieId: string): Promise<MovieDetails | null> => {
     setIsLoading(true);
     setError(null);
     
@@ -100,7 +100,7 @@ export const useMovieApi = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [API_KEY, BASE_URL]); // Dependencies that won't change between renders
 
   return {
     isLoading,
