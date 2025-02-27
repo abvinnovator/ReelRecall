@@ -1,27 +1,43 @@
-
-
+// src/types/index.ts
 export interface Movie {
   id: string;
   title: string;
   year?: number;
   director?: string;
-  genre?: string[];
-  userRating: number;
+  userRating?: number;
   posterUrl?: string;
   watched: boolean;
   watchedDate?: Date;
   notes?: string;
-  imdbId?: string; // Added to link to external database
+  imdbId?: string;
 }
 
-export interface User {
+export interface MovieWithGenres extends Movie {
+  genres: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface MovieSearchResult {
   id: string;
-  username: string;
-  email: string;
+  title: string;
+  year: number | string;
+  poster: string;
+}
+
+export interface MovieDetails {
+  id: string;
+  title: string;
+  year: number;
+  director: string;
+  genre: string[];
+  plot?: string;
+  poster: string;
 }
 
 export interface WatchlistItem {
   id: string;
+  uid?: string;
   title: string;
   year?: number;
   posterUrl?: string;

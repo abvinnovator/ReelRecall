@@ -1,9 +1,9 @@
 import React from 'react';
-import { Movie } from '../../types';
+import { MovieWithGenres } from '../../types/index'
 
 interface MovieCardProps {
-  movie: Movie;
-  onEdit?: (movie: Movie) => void;
+  movie: MovieWithGenres;
+  onEdit?: (movie: MovieWithGenres) => void;
   onDelete?: (id: string) => void;
 }
 
@@ -34,9 +34,9 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, onEdit, onDelete }) => {
             <p className="text-gray-600 mt-1">Director: {movie.director}</p>
           )}
           
-          {movie.genre && movie.genre.length > 0 && (
+          {movie.genres && movie.genres.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-1">
-              {movie.genre.map((g) => (
+              {movie.genres.map((g) => (
                 <span key={g} className="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">
                   {g}
                 </span>
@@ -50,7 +50,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, onEdit, onDelete }) => {
           
           {movie.watchedDate && (
             <p className="mt-2 text-sm text-gray-500">
-              Watched on: {movie.watchedDate.toLocaleDateString()}
+              Watched on: {new Date(movie.watchedDate).toLocaleDateString()}
             </p>
           )}
         </div>

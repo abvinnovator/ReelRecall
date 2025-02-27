@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Movie } from '../../types';
 import { useMovieApi, MovieSearchResult } from '../../hooks/useMovieApi';
 import { useDebounce } from '../../hooks/useDebounce';
+import { movieService } from './services/MovieServices';
+import { useNavigate } from 'react-router-dom';
 
 interface AddMovieFormProps {
-  onSubmit: (movie: Omit<Movie, 'id'>) => void;
+  onSuccess?: () => void;
   onCancel: () => void;
 }
 
-const AddMovieForm: React.FC<AddMovieFormProps> = ({ onSubmit, onCancel }) => {
+const AddMovieForm: React.FC<AddMovieFormProps> = ({ onSuccess, onCancel }) => {
   const [title, setTitle] = useState('');
   const [year, setYear] = useState<number | undefined>(undefined);
   const [director, setDirector] = useState('');
@@ -21,6 +22,8 @@ const AddMovieForm: React.FC<AddMovieFormProps> = ({ onSubmit, onCancel }) => {
   );
   const [notes, setNotes] = useState('');
   const [imdbId, setImdbId] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   // Movie suggestions state
   const [suggestions, setSuggestions] = useState<MovieSearchResult[]>([]);
@@ -28,6 +31,7 @@ const AddMovieForm: React.FC<AddMovieFormProps> = ({ onSubmit, onCancel }) => {
   
   const debouncedSearchTerm = useDebounce(title, 500);
   const { searchMovies, getMovieDetails, isLoading } = useMovieApi();
+  const navigate = useNavigate();
   
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -42,26 +46,38 @@ const AddMovieForm: React.FC<AddMovieFormProps> = ({ onSubmit, onCancel }) => {
     };
     
     fetchSuggestions();
-    // Remove searchMovies from the dependency array to avoid infinite loop
-  }, [debouncedSearchTerm]); // Only depend on the search term
+  }, [debouncedSearchTerm]); 
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
     
-    const movie: Omit<Movie, 'id'> = {
-      title,
-      year,
-      director,
-      genre: genres,
-      userRating: rating,
-      posterUrl,
-      watched: true,
-      watchedDate: watchedDate ? new Date(watchedDate) : undefined,
-      notes,
-      imdbId
-    };
-    
-    onSubmit(movie);
+    try {
+      await movieService.addMovie({
+        title,
+        year,
+        director,
+        genre: genres,
+        userRating: rating,
+        posterUrl,
+        watched: true,
+        watchedDate: watchedDate ? new Date(watchedDate) : undefined,
+        notes,
+        imdbId
+      });
+      
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        navigate('/movies');
+      }
+    } catch (err) {
+      console.error('Error adding movie:', err);
+      setError('Failed to add movie. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
   const handleSelectMovie = async (movie: MovieSearchResult) => {
@@ -111,6 +127,12 @@ const AddMovieForm: React.FC<AddMovieFormProps> = ({ onSubmit, onCancel }) => {
   return (
     <div className="card p-6">
       <h2 className="text-xl font-bold mb-4">Add New Movie</h2>
+      
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
+          {error}
+        </div>
+      )}
       
       <form onSubmit={handleSubmit}>
         <div className="mb-4 relative">
@@ -298,11 +320,20 @@ const AddMovieForm: React.FC<AddMovieFormProps> = ({ onSubmit, onCancel }) => {
         </div>
         
         <div className="flex justify-end space-x-3 mt-6">
-          <button type="button" className="btn-secondary" onClick={onCancel}>
+          <button 
+            type="button" 
+            className="btn-secondary" 
+            onClick={onCancel}
+            disabled={isSubmitting}
+          >
             Cancel
           </button>
-          <button type="submit" className="btn-primary">
-            Add Movie
+          <button 
+            type="submit" 
+            className="btn-primary"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Adding...' : 'Add Movie'}
           </button>
         </div>
       </form>

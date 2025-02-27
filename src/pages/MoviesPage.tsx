@@ -1,29 +1,55 @@
-import React, { useState } from 'react';
-import MovieCard from '../components/movies/MoviesCard';
-import AddMovieForm from '../components/movies/AddMovieForm';
-import { Movie } from '../types';
+import React, { useState, useEffect } from 'react';
+import MovieCard from '../components/movies/MoviesCard'
+import AddMovieForm from "../components/movies/AddMovieForm"
+import { movieService } from "../components/movies/services/MovieServices"
+import { MovieWithGenres } from '../types';
 
-interface MoviesPageProps {
-  movies: Movie[];
-  onAddMovie: (movie: Omit<Movie, 'id'>) => void;
-  onDeleteMovie: (id: string) => void;
-}
-
-const MoviesPage: React.FC<MoviesPageProps> = ({ movies, onAddMovie, onDeleteMovie }) => {
+const MoviesPage: React.FC = () => {
+  const [movies, setMovies] = useState<MovieWithGenres[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'title' | 'rating' | 'date'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  const handleAddMovie = (movie: Omit<Movie, 'id'>) => {
-    onAddMovie(movie);
-    setShowAddForm(false);
+  // Fetch movies when component mounts
+  useEffect(() => {
+    fetchMovies();
+  }, []);
+
+  const fetchMovies = async () => {
+    try {
+      setLoading(true);
+      const moviesData = await movieService.getMovies();
+      setMovies(moviesData);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching movies:', err);
+      setError('Failed to load movies. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const handleDeleteMovie = async (id: string) => {
+    if (confirm('Are you sure you want to delete this movie?')) {
+      try {
+        await movieService.deleteMovie(id);
+        // Remove the deleted movie from state
+        setMovies(prevMovies => prevMovies.filter(movie => movie.id !== id));
+      } catch (err) {
+        console.error('Error deleting movie:', err);
+        // You could set an error state here if needed
+      }
+    }
   };
   
   const filteredMovies = movies.filter(movie =>
     movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    movie.director?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    movie.genre?.some(g => g.toLowerCase().includes(searchTerm.toLowerCase()))
+    (movie.director?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
+    movie.genres?.some(g => g.toLowerCase().includes(searchTerm.toLowerCase()))
   );
   
   const sortedMovies = [...filteredMovies].sort((a, b) => {
@@ -33,8 +59,8 @@ const MoviesPage: React.FC<MoviesPageProps> = ({ movies, onAddMovie, onDeleteMov
         : b.title.localeCompare(a.title);
     } else if (sortBy === 'rating') {
       return sortOrder === 'asc'
-        ? a.userRating - b.userRating
-        : b.userRating - a.userRating;
+        ? (a.userRating || 0) - (b.userRating || 0)
+        : (b.userRating || 0) - (a.userRating || 0);
     } else {
       // Sort by date
       const dateA = a.watchedDate ? new Date(a.watchedDate).getTime() : 0;
@@ -69,10 +95,16 @@ const MoviesPage: React.FC<MoviesPageProps> = ({ movies, onAddMovie, onDeleteMov
         </button>
       </div>
       
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
+          {error}
+        </div>
+      )}
+      
       {showAddForm && (
         <div className="mb-8">
           <AddMovieForm 
-            onSubmit={handleAddMovie} 
+            onSuccess={fetchMovies} 
             onCancel={() => setShowAddForm(false)} 
           />
         </div>
@@ -123,37 +155,46 @@ const MoviesPage: React.FC<MoviesPageProps> = ({ movies, onAddMovie, onDeleteMov
         </div>
       </div>
       
-      <div className="space-y-4">
-        {sortedMovies.length > 0 ? (
-          sortedMovies.map(movie => (
-            <MovieCard
-              key={movie.id}
-              movie={movie}
-              onDelete={onDeleteMovie}
-            />
-          ))
-        ) : (
-          <div className="card text-center py-12">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
-            </svg>
-            <h3 className="text-xl font-bold text-gray-700 mb-2">No movies found</h3>
-            <p className="text-gray-500 mb-6">
-              {searchTerm 
-                ? "No movies match your search criteria." 
-                : "You haven't added any movies yet."}
-            </p>
-            {!searchTerm && !showAddForm && (
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="btn-primary"
-              >
-                Add Your First Movie
-              </button>
-            )}
-          </div>
-        )}
-      </div>
+      {loading ? (
+        <div className="flex justify-center items-center py-20">
+          <svg className="animate-spin h-10 w-10 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {sortedMovies.length > 0 ? (
+            sortedMovies.map(movie => (
+              <MovieCard
+                key={movie.id}
+                movie={movie}
+                onDelete={handleDeleteMovie}
+              />
+            ))
+          ) : (
+            <div className="card text-center py-12">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+              </svg>
+              <h3 className="text-xl font-bold text-gray-700 mb-2">No movies found</h3>
+              <p className="text-gray-500 mb-6">
+                {searchTerm 
+                  ? "No movies match your search criteria." 
+                  : "You haven't added any movies yet."}
+              </p>
+              {!searchTerm && !showAddForm && (
+                <button
+                  onClick={() => setShowAddForm(true)}
+                  className="btn-primary"
+                >
+                  Add Your First Movie
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
