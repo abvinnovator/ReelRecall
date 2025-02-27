@@ -90,15 +90,15 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout }) => {
               </>
             ) : (
               <>
-                <Link 
+                {/* <Link 
                   to="/login" 
                   className="text-gray-600 hover:text-primary-600 transition-colors py-2"
                   onClick={() => setMenuOpen(false)}
                 >
                   Login
-                </Link>
+                </Link> */}
                 <Link 
-                  to="/signup" 
+                  to="/login" 
                   className="text-gray-600 hover:text-primary-600 transition-colors py-2"
                   onClick={() => setMenuOpen(false)}
                 >
