@@ -33,6 +33,7 @@ const MoviesPage: React.FC = () => {
   };
 
 
+
   const handleDeleteMovie = async (id: string) => {
     if (confirm('Are you sure you want to delete this movie?')) {
       try {

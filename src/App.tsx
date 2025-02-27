@@ -15,18 +15,6 @@ const AppRoutes = () => {
   const { user, loading, signIn, signUp, signOut, signInWithGoogle } = useAuth();
   const [movies, setMovies] = React.useState<Movie[]>([]);
   
-  const handleAddMovie = (newMovie: Omit<Movie, 'id'>) => {
-    const movie: Movie = {
-      ...newMovie,
-      id: Date.now().toString()
-    };
-    
-    setMovies([...movies, movie]);
-  };
-  
-  const handleDeleteMovie = (id: string) => {
-    setMovies(movies.filter(movie => movie.id !== id));
-  };
 
   if (loading) {
     return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
@@ -48,9 +36,7 @@ const AppRoutes = () => {
           <Route path="/movies" element={
             user ? (
               <MoviesPage 
-                movies={movies} 
-                onAddMovie={handleAddMovie} 
-                onDeleteMovie={handleDeleteMovie} 
+        
               />
             ) : (
               <Navigate to="/login" />
