@@ -22,12 +22,12 @@ const HomePage: React.FC<HomePageProps> = ({ isLoggedIn }) => {
           </Link>
         ) : (
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link to="/signup" className="btn-primary text-lg px-8 py-3">
+            <Link to="/login" className="btn-primary text-lg px-8 py-3">
               Get Started
             </Link>
-            <Link to="/login" className="btn-secondary text-lg px-8 py-3">
+            {/* <Link to="/login" className="btn-secondary text-lg px-8 py-3">
               Log In
-            </Link>
+            </Link> */}
           </div>
         )}
       </section>

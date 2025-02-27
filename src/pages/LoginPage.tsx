@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<{ error: any | null; data: any | null }>;
@@ -128,9 +128,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, signInWithGoogle }) => {
             </button>
           </div>
           
-          <p className="text-center text-gray-600 mt-4">
+          {/* <p className="text-center text-gray-600 mt-4">
             Don't have an account? <Link to="/signup" className="text-blue-600 hover:underline">Sign Up</Link>
-          </p>
+          </p> */}
         </form>
       </div>
     </div>

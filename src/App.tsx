@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Header from './components/layout/Header';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
+
 import MoviesPage from './pages/MoviesPage';
 import ImportPage from './pages/ImportPage';
 import AuthCallbackPage from './pages/AuthCallbackPage';
@@ -12,7 +12,7 @@ import { Movie } from './types';
 import Footer from './components/layout/Footer';
 
 const AppRoutes = () => {
-  const { user, loading, signIn, signUp, signOut, signInWithGoogle } = useAuth();
+  const { user, loading, signIn, signOut, signInWithGoogle } = useAuth();
   const [movies, setMovies] = React.useState<Movie[]>([]);
   
 
@@ -30,9 +30,9 @@ const AppRoutes = () => {
 <Route path="/login" element={
   user ? <Navigate to="/movies" /> : <LoginPage onLogin={signIn} signInWithGoogle={signInWithGoogle} />
 } />
-          <Route path="/signup" element={
+          {/* <Route path="/signup" element={
             user ? <Navigate to="/movies" /> : <SignupPage onSignup={signUp} />
-          } />
+          } /> */}
           <Route path="/movies" element={
             user ? (
               <MoviesPage 
