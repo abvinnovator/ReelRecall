@@ -13,7 +13,7 @@ const HomePage: React.FC<HomePageProps> = ({ isLoggedIn }) => {
           Never Forget a Movie Again
         </h1>
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          Track, rate, and remember all the movies you've watched in one place.
+          Track, rate,Share and remember all the movies you've watched in one place.
         </p>
         
         {isLoggedIn ? (
@@ -64,13 +64,13 @@ const HomePage: React.FC<HomePageProps> = ({ isLoggedIn }) => {
           
           <div className="card text-center">
             <div className="mb-4 flex justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-              </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 48 48">
+<path fill="#607d8b" d="M36,42H12c-3.309,0-6-2.691-6-6V6h4v30c0,1.103,0.897,2,2,2h24c1.103,0,2-0.897,2-2v-2h4v2 C42,39.309,39.309,42,36,42z"></path><path fill="#2196f3" d="M42 13L33 20 33 6z"></path><path fill="#2196f3" d="M20,32h-4v-9c0-6.617,5.383-12,12-12h7v4h-7c-4.411,0-8,3.589-8,8V32z"></path>
+</svg>
             </div>
-            <h3 className="text-xl font-bold mb-2">Easy Import</h3>
+            <h3 className="text-xl font-bold mb-2">Easy Share</h3>
             <p className="text-gray-600">
-              Bulk import your movie collection from spreadsheets.
+             Share your all Movie collections in realtime with ur friends.
             </p>
           </div>
         </div>
@@ -98,7 +98,7 @@ const HomePage: React.FC<HomePageProps> = ({ isLoggedIn }) => {
             </div>
             <h3 className="text-xl font-bold mb-2 text-center">Add Your Movies</h3>
             <p className="text-gray-600 text-center">
-              Add movies individually or import in bulk.
+              Add movies individually 
             </p>
           </div>
           

@@ -26,9 +26,9 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout }) => {
             {isLoggedIn ? (
               <>
                 <Link to="/movies" className="text-gray-600 hover:text-primary-600 transition-colors">My Movies</Link>
-                <Link to="/import" className="text-gray-600 hover:text-primary-600 transition-colors">Import</Link>
+                {/* <Link to="/import" className="text-gray-600 hover:text-primary-600 transition-colors">Import</Link> */}
                 <Link to="/manage-sharing" className="text-gray-600 hover:text-primary-600 transition-colors">Manage Shared</Link>
-                <Link to="/shared-with-me" className="text-gray-600 hover:text-primary-600 transition-colors">Share</Link>
+                <Link to="/shared-with-me" className="text-gray-600 hover:text-primary-600 transition-colors">Shared with me</Link>
                 <button 
                   onClick={onLogout}
                   className="btn-secondary"
@@ -73,13 +73,13 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout }) => {
                 >
                   My Movies
                 </Link>
-                <Link 
+                {/* <Link 
                   to="/import" 
                   className="text-gray-600 hover:text-primary-600 transition-colors py-2"
                   onClick={() => setMenuOpen(false)}
                 >
                   Import
-                </Link>
+                </Link> */}
                 <Link 
               to="/manage-sharing" 
               className="text-gray-600 hover:text-primary-600 transition-colors py-2"

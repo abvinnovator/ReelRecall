@@ -138,7 +138,7 @@ const SharedMoviesPage: React.FC<SharedMoviesPageProps> = () => {
                 <h2 className="text-xl font-semibold text-gray-700 px-4 py-2 bg-gray-100 rounded-lg">
                   Shared by: {ownerEmail}
                 </h2>
-                <div className="space-y-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                   {movies.map(movie => (
                     <MovieCard
                       key={movie.id}
