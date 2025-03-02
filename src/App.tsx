@@ -10,6 +10,8 @@ import AuthCallbackPage from './pages/AuthCallbackPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Movie } from './types';
 import Footer from './components/layout/Footer';
+import SharedMoviesPage from './pages/SharedMoviePage';
+import ShareManagementPage from './pages/SharedManagementPage';
 
 const AppRoutes = () => {
   const { user, loading, signIn, signOut, signInWithGoogle } = useAuth();
@@ -44,6 +46,12 @@ const AppRoutes = () => {
           } />
           <Route path="/import" element={
             user ? <ImportPage onImportMovies={(importedMovies) => setMovies([...movies, ...importedMovies])} /> : <Navigate to="/login" />
+          } />
+           <Route path="/shared-with-me" element={
+            user ? <SharedMoviesPage /> : <Navigate to="/login" />
+          } />
+          <Route path="/manage-sharing" element={
+            user ? <ShareManagementPage /> : <Navigate to="/login" />
           } />
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
         </Routes>

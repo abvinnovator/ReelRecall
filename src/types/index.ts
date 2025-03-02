@@ -1,4 +1,3 @@
-// src/types/index.ts
 export interface Movie {
   id: string;
   title: string;
@@ -48,4 +47,17 @@ export interface WatchlistItem {
   imdbId?: string;
   imdbRating?: number; // Add this line
 
+}
+export interface ShareCollectionInput {
+  sharedWithEmail: string;
+  permissionLevel: 'read' | 'edit';
+}
+
+export interface SharedCollection {
+  id: string;
+  ownerId: string;
+  sharedWithId: string;
+  sharedWithEmail: string;
+  permissionLevel: 'read' | 'edit';
+  createdAt: Date;
 }

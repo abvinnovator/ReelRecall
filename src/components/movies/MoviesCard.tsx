@@ -5,6 +5,7 @@ interface MovieCardProps {
   movie: MovieWithGenres;
   onEdit?: (movie: MovieWithGenres) => void;
   onDelete?: (id: string) => void;
+  shared?: boolean;
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie, onEdit, onDelete }) => {
