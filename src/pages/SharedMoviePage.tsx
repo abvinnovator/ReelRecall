@@ -9,31 +9,59 @@ interface SharedMoviesPageProps {
 
 const SharedMoviesPage: React.FC<SharedMoviesPageProps> = () => {
   const [sharedMovies, setSharedMovies] = useState<MovieWithGenres[]>([]);
+  const [myMovies, setMyMovies] = useState<MovieWithGenres[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'title' | 'rating' | 'date'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [activeTab, setActiveTab] = useState<'all' | 'common'>('all');
 
   useEffect(() => {
-    fetchSharedMovies();
+    fetchMovies();
   }, []);
 
-  const fetchSharedMovies = async () => {
+  const fetchMovies = async () => {
     try {
       setLoading(true);
-      const { movies } = await movieService.getSharedWithMe();
-      setSharedMovies(movies);
+      // Fetch both shared movies and my movies in parallel
+      const [sharedData, myMoviesData] = await Promise.all([
+        movieService.getSharedWithMe(),
+        movieService.getMovies()
+      ]);
+      
+      setSharedMovies(sharedData.movies);
+      setMyMovies(myMoviesData);
       setError(null);
     } catch (err) {
-      console.error('Error fetching shared movies:', err);
-      setError('Failed to load shared movies. Please try again later.');
+      console.error('Error fetching movies:', err);
+      setError('Failed to load movies. Please try again later.');
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredMovies = sharedMovies.filter(movie =>
+  // Find common movies (movies that both you and your friends have watched)
+  const findCommonMovies = () => {
+    if (!myMovies || !sharedMovies) return [];
+    
+    // Extract IMDb IDs from my movies for fast lookup
+    const myMovieImdbIds = new Set(
+      myMovies.map(movie => movie.imdbId).filter(Boolean)
+    );
+    
+    // Filter shared movies that have matching IMDb IDs
+    return sharedMovies.filter(movie => 
+      movie.imdbId && myMovieImdbIds.has(movie.imdbId)
+    );
+  };
+
+  const commonMovies = findCommonMovies();
+  
+  // Determine which movies to display based on active tab
+  const moviesToDisplay = activeTab === 'all' ? sharedMovies : commonMovies;
+
+  const filteredMovies = moviesToDisplay.filter(movie =>
     movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (movie.director?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
     movie.genres?.some(g => g.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -70,6 +98,38 @@ const SharedMoviesPage: React.FC<SharedMoviesPageProps> = () => {
     <div className="max-w-5xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Shared With Me</h1>
+      </div>
+      
+      {/* Tab Navigation */}
+      <div className="mb-6 border-b border-gray-200">
+        <nav className="flex space-x-8">
+          <button
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'all'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+            onClick={() => setActiveTab('all')}
+          >
+            All Shared
+            <span className="ml-2 bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-xs">
+              {sharedMovies.length}
+            </span>
+          </button>
+          <button
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'common'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+            onClick={() => setActiveTab('common')}
+          >
+            Common Movies
+            <span className="ml-2 bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-xs">
+              {commonMovies.length}
+            </span>
+          </button>
+        </nav>
       </div>
       
       {error && (
@@ -135,8 +195,11 @@ const SharedMoviesPage: React.FC<SharedMoviesPageProps> = () => {
           {Object.keys(moviesByOwner).length > 0 ? (
             Object.entries(moviesByOwner).map(([ownerEmail, movies]) => (
               <div key={ownerEmail} className="space-y-4">
-                <h2 className="text-xl font-semibold text-gray-700 px-4 py-2 bg-gray-100 rounded-lg">
-                  Shared by: {ownerEmail}
+                <h2 className="text-xl font-semibold text-gray-700 px-4 py-2 bg-gray-100 rounded-lg flex justify-between items-center">
+                  <span>Shared by: {ownerEmail}</span>
+                  <span className="text-sm font-normal text-gray-500">
+                    {movies.length} {movies.length === 1 ? 'movie' : 'movies'}
+                  </span>
                 </h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                   {movies.map(movie => (
@@ -155,11 +218,17 @@ const SharedMoviesPage: React.FC<SharedMoviesPageProps> = () => {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
-              <h3 className="text-xl font-bold text-gray-700 mb-2">No shared movies found</h3>
+              <h3 className="text-xl font-bold text-gray-700 mb-2">
+                {activeTab === 'all' 
+                  ? "No shared movies found" 
+                  : "No common movies found"}
+              </h3>
               <p className="text-gray-500 mb-6">
                 {searchTerm 
-                  ? "No shared movies match your search criteria." 
-                  : "No one has shared their movie collection with you yet."}
+                  ? "No movies match your search criteria." 
+                  : activeTab === 'all'
+                    ? "No one has shared their movie collection with you yet."
+                    : "You don't have any movies in common with your friends yet."}
               </p>
             </div>
           )}
