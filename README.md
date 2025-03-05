@@ -1,5 +1,9 @@
 # ReelRecall: Your Personal Movie Memory Bank
 
+## Give a try - https://reel-recall.vercel.app/
+
+![image](https://github.com/user-attachments/assets/c0b7d632-1600-4d53-83f5-7f0eeb4902c4)
+
 ##  Project Overview
 
 ReelRecall is a state-of-the-art web application for movie fans to easily catalog, monitor, and share their movie experiences. Developed using the latest web technologies, the platform turns movie tracking into a fun, social activity.
