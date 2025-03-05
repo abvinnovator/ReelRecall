@@ -1,50 +1,67 @@
-# React + TypeScript + Vite
+# ReelRecall: Your Personal Movie Memory Bank
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+##  Project Overview
 
-Currently, two official plugins are available:
+ReelRecall is a state-of-the-art web application for movie fans to easily catalog, monitor, and share their movie experiences. Developed using the latest web technologies, the platform turns movie tracking into a fun, social activity.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+##  Tech Stack
+- **Frontend:** React, TypeScript, Vite
+- **Backend:** Supabase
+- **API:** TMDB (The Movie Database)
 
-## Expanding the ESLint configuration
+## ✨ Key Features
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+###  Seamless Movie Tracking
+- Real-time movie identification with TMDB API support
+- Autopopulated metadata for detailed movie information
+- Single-click movie logging with low friction
 
-- Configure the top-level `parserOptions` property like this:
+###  Personalized Rating System
+- Personalize and monitor your movie ratings
+- In-depth analysis of your viewing history
+- Easy-to-use interface for rating and reviewing films
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+###  Social Sharing Features
+- Separate views for shared and joint watches
+- Link up with like-minded movie buffs
+- Share your movie experience with friends and the community
+
+###  Flexible Data Management
+- Simple import and export of movie watch history
+- Complete movie tracking with no data entry inconvenience
+
+
+
+##  Installation
+
+### Prerequisites
+- Node.js (v18+)
+- npm or yarn
+- Supabase account
+- TMDB API Key
+
+### Setup
+1. Clone the repository
+   ```bash
+   https://github.com/abvinnovator/ReelRecall.git
+   ```
+
+2. Install dependencies
+   ```bash
+   cd reelrecall
+   ```
+npm install
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+3. Configure environment variables
+   - Create a `.env` file
+   - Include Supabase and TMDB credentials
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+4. Start the application
+   ```bash
+   npm run dev
+   ```
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+---
+
+**Built with ❤️ for movie lovers everywhere**
