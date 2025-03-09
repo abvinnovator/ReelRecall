@@ -1,7 +1,4 @@
-// 1. First, install the required package:
-// npm install react-ga4
 
-// 2. Create a new file called GoogleAnalytics.tsx:
 
 import ReactGA from 'react-ga4';
 
