@@ -6,7 +6,7 @@
 import ReactGA from 'react-ga4';
 
 // Your Google Analytics measurement ID
-const MEASUREMENT_ID = import.meta.env.MEASUREMENT_ID; // Replace with your actual measurement ID
+const MEASUREMENT_ID = import.meta.env.VITE_MEASUREMENT_ID; // Replace with your actual measurement ID
 
 export const initGA = () => {
   // Initialize Google Analytics
