@@ -12,19 +12,20 @@ import Footer from './components/layout/Footer';
 import SharedMoviesPage from './pages/SharedMoviePage';
 import ShareManagementPage from './pages/SharedManagementPage';
 import { initGA, logPageView } from  './utils/GoolgeAnaltyics';
+import { useClarityTracking } from './utils/ClarityTracking';
 
-// Analytics tracker component
 const AnalyticsTracker = () => {
   const location = useLocation();
   
+  useClarityTracking();
+  
   useEffect(() => {
-    // Track page views when the location changes
+  
     logPageView(location.pathname + location.search);
   }, [location]);
   
-  return null; // This component doesn't render anything
+  return null; 
 };
-
 const AppRoutes = () => {
   const { user, loading, signIn, signOut, signInWithGoogle } = useAuth();
   const [movies, setMovies] = React.useState<Movie[]>([]);
@@ -67,7 +68,7 @@ const AppRoutes = () => {
 };
 
 const App: React.FC = () => {
-  // Initialize Google Analytics once when the app loads
+
   useEffect(() => {
     initGA();
   }, []);
@@ -75,7 +76,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <AuthProvider>
-        <AnalyticsTracker /> {/* Add the tracker component inside Router */}
+        <AnalyticsTracker /> 
         <AppRoutes />
       </AuthProvider>
     </Router>
