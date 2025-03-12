@@ -1,41 +1,72 @@
-// 1. Create a new file called ClarityTracking.tsx
 
+
+import clarity from '@microsoft/clarity';
 import { useEffect } from 'react';
 
-declare global {
-  interface Window {
-    clarity: any;
-  }
-}
+// Your Clarity project ID
+const CLARITY_PROJECT_ID = import.meta.env.VITE_CLARITY_PROJECT_ID;
 
-export const CLARITY_PROJECT_ID = 'qn3j40oost'; // Replace with your actual Project ID
+// // Configure Clarity settings
+// const clarityConfig = {
+//   projectId: CLARITY_PROJECT_ID,
+//   upload: 'https://www.clarity.ms/collect',
+//   delay: 500, // Delay before starting to track (in milliseconds)
+//   track: true, // Enable tracking
+//   content: true, // Track content changes
+//   // Optional: mask specific elements - add CSS selectors to mask
+//   mask: ['input[type="password"]', '.credit-card', '.ssn'],
+//   // Optional: if you want to enable debug mode to see console logs
+//   debug: import.meta.env.DEV ? true : false,
+//   // Optional: cookies settings
+//   cookies: true, // Enable cookies for session tracking
+// };
 
+// Initialize Clarity with configuration
 export const initClarity = () => {
-  if (window.clarity) return; // Prevent duplicate initialization
-  
-  const script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.async = true;
-  script.src = `https://www.clarity.ms/tag/${CLARITY_PROJECT_ID}`;
-  
-  // Add the script to the document head
-  const head = document.head || document.getElementsByTagName('head')[0];
-  head.appendChild(script);
+  try {
+    clarity.init(CLARITY_PROJECT_ID);
+    console.log('Microsoft Clarity initialized successfully');
+  } catch (e) {
+    console.error('Failed to initialize Microsoft Clarity:', e);
+  }
 };
 
-// Hook to initialize Clarity
+// Custom hook to initialize Clarity
 export const useClarityTracking = () => {
   useEffect(() => {
-    // Only initialize in production environment
-    if (import.meta.env.PROD) {
+    // Only initialize in production environment or remove this condition for testing
+    if (import.meta.env.PROD || true) { // Force initialization for testing
       initClarity();
     }
   }, []);
 };
 
-// Function to manually track events (if needed)
-export const trackClarityEvent = (eventName: string) => {
-  if (window.clarity) {
-    window.clarity('event', eventName);
+// // Track custom events in Clarity
+// export const trackClarityEvent = (eventName: string, eventData?: Record<string, any>) => {
+//   try {
+//     clarity.event(eventName, eventData);
+//     console.log(`Clarity event tracked: ${eventName}`, eventData);
+//   } catch (e) {
+//     console.error(`Failed to track Clarity event ${eventName}:`, e);
+//   }
+// };
+
+// // Set custom tags for better filtering in the Clarity dashboard
+// export const setClarityTag = (tagName: string, tagValue: string) => {
+//   try {
+//     clarity.set(tagName, tagValue);
+//     console.log(`Clarity tag set: ${tagName}=${tagValue}`);
+//   } catch (e) {
+//     console.error(`Failed to set Clarity tag ${tagName}:`, e);
+//   }
+// };
+
+// Identify users if your privacy policy allows it
+export const identifyUser = (userId: string) => {
+  try {
+    clarity.identify(userId);
+    console.log(`Clarity user identified: ${userId}`);
+  } catch (e) {
+    console.error(`Failed to identify user in Clarity:`, e);
   }
 };
