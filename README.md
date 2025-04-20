@@ -1,4 +1,4 @@
-# ReelRecall: Your Personal Movie Memory Bank
+# SnapShare: Your Personal Movie Memory Bank
 
 ## Give a try - https://reel-recall.vercel.app/
 
@@ -6,7 +6,7 @@
 
 ##  Project Overview
 
-ReelRecall is a state-of-the-art web application for movie fans to easily catalog, monitor, and share their movie experiences. Developed using the latest web technologies, the platform turns movie tracking into a fun, social activity.
+SnapShare is a state-of-the-art web application for movie fans to easily catalog, monitor, and share their movie experiences. Developed using the latest web technologies, the platform turns movie tracking into a fun, social activity.
 
 ##  Tech Stack
 - **Frontend:** React, TypeScript, Vite
@@ -52,7 +52,7 @@ ReelRecall is a state-of-the-art web application for movie fans to easily catalo
 
 2. Install dependencies
    ```bash
-   cd reelrecall
+   cd SnapShare
    ```
 npm install
 ```

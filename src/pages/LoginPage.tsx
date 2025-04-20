@@ -49,7 +49,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, signInWithGoogle }) => {
   return (
     <div className="max-w-md mx-auto">
       <div className="card bg-white p-8 rounded-lg shadow">
-        <h1 className="text-2xl font-bold text-center mb-6">Welcome to ReelRecall</h1>
+        <h1 className="text-2xl font-bold text-center mb-6">Welcome to SnapShare</h1>
         
         {error && (
           <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">
