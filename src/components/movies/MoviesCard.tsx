@@ -172,4 +172,4 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, onEdit, onDelete }) => {
   );
 };
 
-export default MovieCard;
+export default MovieCard
